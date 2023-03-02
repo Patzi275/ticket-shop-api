@@ -9,6 +9,7 @@ class Demande extends Model
     protected $fillable = [
         'info_org',
         'info_exp',
+        'valider',
         'user_id'
     ];
 }

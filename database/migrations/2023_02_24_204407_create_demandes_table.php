@@ -18,6 +18,7 @@ class CreateDemandesTable extends Migration
             $table->id();
             $table->text('info_org');
             $table->text('info_exp');
+            $table->boolean('valider')->default(false);
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

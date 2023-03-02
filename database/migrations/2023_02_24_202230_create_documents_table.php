@@ -17,7 +17,8 @@ class CreateDocumentsTable extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->bigInteger('taille');
+            $table->string('lien');
+            $table->bigInteger('taille')->default(0);
             $table->boolean('est_principal');
             $table->foreignId('evenement_id')->constrained();
             $table->timestamps();

@@ -8,6 +8,7 @@ class Document extends Model
 {
     protected $fillable = [
         'nom',
+        'lien',
         'taille',
         'est_principal',
         'evenement_id'

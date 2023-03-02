@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Achat;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -61,4 +62,35 @@ class UserController extends Controller
     {
         //
     }
+
+    /**
+     * Get all achat for an user
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    function achats(Request $request, int $id) {
+        try {
+            $user = User::find($id);
+
+            if ($user !== null) {
+                $achats = Achat::where('user_id', '=', $user->id)->get();
+                
+                return response()->json([
+                    "success" => true,
+                    "data" => $achats
+                ]);
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => "Cet 'id' de user n'existe pas",
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    } 
 }
