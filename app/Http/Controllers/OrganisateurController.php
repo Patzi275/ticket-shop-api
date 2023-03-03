@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Organisateur;
 use App\Models\Evenement;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -174,10 +175,6 @@ class OrganisateurController extends Controller
      * @return \Illuminate\Http\Response
      */
     function evenements(Request $request, int $id) {
-        return response()->json([
-            "success" => true,
-            "data" => $id
-        ]);
         try {
             $organisateur = Organisateur::find($id);
 
@@ -187,6 +184,43 @@ class OrganisateurController extends Controller
                 return response()->json([
                     "success" => true,
                     "data" => $evenements
+                ]);
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => "Cet 'id' de organisateur n'existe pas",
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    } 
+
+    /**
+     * Get user behind the organisateur
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    function user(Request $request, int $id) {
+        try {
+            $organisateur = Organisateur::find($id);
+
+            if ($organisateur !== null) {
+                $user = User::find($organisateur->user_id);
+                if ($user == null) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => 'The user don\'t exist for this organisateur'
+                    ], 500);
+                }
+
+                return response()->json([
+                    "success" => true,
+                    "data" => $user
                 ]);
             }
 

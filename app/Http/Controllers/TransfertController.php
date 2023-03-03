@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transfert;
+use App\Models\Organisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -165,4 +166,46 @@ class TransfertController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Validate a transfert
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    function valider(Request $request, int $id) {
+        try {
+            $transfert = Transfert::find($id);
+
+            if ($transfert !== null) {
+                $organisateur = Organisateur::find($transfert->organisateur_id);
+                if ($organisateur == null) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => "La transfert n'a pas d'utilisateur associé"
+                    ], 500);
+                }
+
+                $transfert->valider = true;
+                $organisateur->role = "organisateur";
+                $organisateur->save();
+                $transfert->save();
+                
+                return response()->json([
+                    "success" => true,
+                    "message" => "Acceptation de transfert reussie"
+                ]);
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => "Cet 'id' de transfert n'existe pas",
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    } 
 }

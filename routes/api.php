@@ -10,7 +10,9 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TransfertController;
 use App\Http\Controllers\AchatController;
+use App\Http\Controllers\PieceController;
 use App\Http\Controllers\DemandeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Mail\Transport\Transport;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'documents' => DocumentController::class,
         'evenements' => EvenementController::class,
         'organisateurs' => OrganisateurController::class,
-        'pieces' => PiecesController::class,
+        'pieces' => PieceController::class,
         'tickets' => TicketController::class,
         'transferts' => TransfertController::class,
     ]);
@@ -66,7 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     */
 
     Route::get('users/{id}/achats', [UserController::class, 'achats']);
-    Route::get('organisateurs/{id}/evenements', [OrganisateurController::class, 'index']);
+    Route::get('organisateurs/{id}/evenements', [OrganisateurController::class, 'evenements']);
     Route::get('evenements/{id}/documents', [EvenementController::class, 'documents']);
     Route::get('evenements/{id}/tickets', [EvenementController::class, 'tickets']);
     Route::get('tickets/{id}/achats', [TicketController::class, 'achats']);
@@ -74,6 +76,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('achats/{id}/utilisateur', [AchatController::class, 'utilisateur']);
     Route::get('demandes/{id}/utilisateur', [DemandeController::class, 'utilisateur']);
     Route::get('demandes/{id}/pieces', [DemandeController::class, 'pieces']);
+    
+    Route::get('organisateurs/{id}/user', [OrganisateurController::class, 'user']);
+    Route::get('users/{id}/organisateur', [UserController::class, 'organisateur']);
+    Route::get('demandes/{id}/validate', [DemandeController::class, 'valider']);
+    Route::get('transferts/{id}/validate', [DemandeController::class, 'valider']);
     
 });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Organisateur;
 use App\Models\Achat;
 use Illuminate\Http\Request;
 
@@ -79,6 +80,37 @@ class UserController extends Controller
                 return response()->json([
                     "success" => true,
                     "data" => $achats
+                ]);
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => "Cet 'id' de user n'existe pas",
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    } 
+
+    /**
+     * Get the organisateur behing an user
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    function organisateur(Request $request, int $id) {
+        try {
+            $user = User::find($id);
+
+            if ($user !== null) {
+                $organisateur = Organisateur::where('user_id', '=', $user->id)->first();
+                
+                return response()->json([
+                    "success" => true,
+                    "data" => $organisateur
                 ]);
             }
 

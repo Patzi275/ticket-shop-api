@@ -229,4 +229,46 @@ class DemandeController extends Controller
             ], 500);
         }
     } 
+    
+    /**
+     * Validate a demande
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    function valider(Request $request, int $id) {
+        try {
+            $demande = Demande::find($id);
+
+            if ($demande !== null) {
+                $user = User::find($demande->user_id);
+                if ($user == null) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => "La demande n'a pas d'utilisateur associé"
+                    ], 500);
+                }
+
+                $demande->valider = true;
+                $user->role = "organisateur";
+                $user->save();
+                $demande->save();
+                
+                return response()->json([
+                    "success" => true,
+                    "message" => "Acceptation de demande reussie"
+                ]);
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => "Cet 'id' de demande n'existe pas",
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    } 
 }
